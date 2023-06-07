@@ -1,5 +1,6 @@
 package com.example.questionnair.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -14,55 +15,77 @@ import javax.persistence.Table;
 public class Questionnaires {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="questionnaire_id")
+	@Column(name = "questionnaire_id")
 	private int questionnaireId;
-	@Column(name="title")
+	@Column(name = "title")
 	private String title;
-	@Column(name="start_date")
-	private LocalDateTime startDate;
-	@Column(name="end_date")
-	private LocalDateTime endDate;
-	@Column(name="is_active")
+	@Column(name = "start_date")
+	private LocalDate startDate;
+	@Column(name = "end_date")
+	private LocalDate endDate;
+	@Column(name = "is_active")
 	private boolean isActive;
-	@Column(name="description")
+	@Column(name = "description")
 	private String description;
+	@Column(name = "create_date")
+	private LocalDateTime createDate = LocalDateTime.now();
+
 	public int getQuestionnaireId() {
 		return questionnaireId;
 	}
+
 	public void setQuestionnaireId(int questionnaireId) {
 		this.questionnaireId = questionnaireId;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public LocalDateTime getStartDate() {
+
+	
+
+	public LocalDate getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(LocalDateTime startDate) {
+
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
-	public LocalDateTime getEndDate() {
+
+	public LocalDate getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(LocalDateTime endDate) {
+
+	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
+
 	public boolean isActive() {
 		return isActive;
 	}
+
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
 }

@@ -15,15 +15,56 @@ public class Options {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "option_id")
-	private Long optionId;
-
+	private int optionId;
 	@ManyToOne
 	@JoinColumn(name = "question_id")
 	private Questions question;
+	@ManyToOne
+	@JoinColumn(name = "questionnaire_id")
+	private Questionnaires questionnaire;
 	@Column(name = "option_name")
 	private String optionName;
 	@Column(name = "count")
 	private int count;
 
-	// 其他欄位及相對應的getter和setter方法
+	public int getOptionId() {
+		return optionId;
+	}
+
+	public void setOptionId(int optionId) {
+		this.optionId = optionId;
+	}
+
+	public Questions getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(Questions question) {
+		this.question = question;
+	}
+
+	public String getOptionName() {
+		return optionName;
+	}
+
+	public void setOptionName(String optionName) {
+		this.optionName = optionName;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public Questionnaires getQuestionnaire() {
+		return questionnaire;
+	}
+
+	public void setQuestionnaire(Questionnaires questionnaire) {
+		this.questionnaire = questionnaire;
+	}
+
 }

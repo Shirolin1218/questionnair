@@ -1,17 +1,9 @@
 package com.example.questionnair.vo.response;
 
-public class OptionResponse {
-
+public class ReportsResponse {
+	
 	private String code;
 	private String message;
-
-	public OptionResponse() {
-	}
-
-	public OptionResponse(String code, String message) {
-		this.code = code;
-		this.message = message;
-	}
 
 	public String getCode() {
 		return code;

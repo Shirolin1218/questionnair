@@ -14,8 +14,8 @@ import javax.persistence.Table;
 public class Questions {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "qusetion_id")
-	private Long questionId;
+	@Column(name = "question_id")
+	private int questionId;
 
 	@ManyToOne
 	@JoinColumn(name = "questionnaire_id")
@@ -27,11 +27,11 @@ public class Questions {
 	@Column(name = "is_required")
 	private boolean isRequired;
 
-	public Long getQuestionId() {
+	public int getQuestionId() {
 		return questionId;
 	}
 
-	public void setQuestionId(Long questionId) {
+	public void setQuestionId(int questionId) {
 		this.questionId = questionId;
 	}
 

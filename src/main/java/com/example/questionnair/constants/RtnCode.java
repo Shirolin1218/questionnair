@@ -6,7 +6,11 @@ public enum RtnCode {
 	CANNOT_EMPTY("400", "can't empty!!"), //
 	NOT_FOUND("404", "not found!!"), //
 	FAILD("400", "faild!"), //
-	
+	BAD_REQUEST("400", "can't get the request!!"), //
+	BAD_VALUE("400", "bad or empty value!!"), //
+	REPEAT_TITLE("400", "title can't be repeated!!"), //
+	NO_DATA_UPDATED("400", "no data updated!!"),//
+	CANNOT_FIND_QUESTIONNAIRE("400", "can't find the questionnaire!!"),//
 	;
 
 	private String code;
