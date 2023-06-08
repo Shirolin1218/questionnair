@@ -7,8 +7,10 @@ import com.example.questionnair.entity.Questions;
 
 public class QuestionnairesRequest {
 
+	private int page;
+
 	private Questionnaires questionnaire;
-	
+
 	private List<Questions> questionList;
 
 	public Questionnaires getQuestionnaire() {
@@ -25,6 +27,14 @@ public class QuestionnairesRequest {
 
 	public void setQuestionList(List<Questions> questionList) {
 		this.questionList = questionList;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 }

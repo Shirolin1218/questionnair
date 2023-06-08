@@ -11,13 +11,15 @@ import com.example.questionnair.vo.response.QuestionnairesResponse;
 public interface QuestionnairesService {
 
 	public QuestionnairesResponse newQuestionnaire(QuestionnairesRequest req);
-	
+
 	public QuestionnairesResponse updateQuestionnaire(QuestionnairesRequest req);
 
 	public QuestionnairesResponse getHowManyData();
 
 	public List<Questionnaires> findQuestionnairesPage(Pageable pageable);
-	
+
 	public QuestionnairesResponse findByTitle(String title);
+
+	public QuestionnairesResponse searchQuestionnaires(QuestionnairesRequest req);
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,12 +40,18 @@ public class QuestionnairesController {
 
 	@PostMapping("/findQuestionnairesPage")
 	public List<Questionnaires> findQuestionnairesPage(@RequestBody int page) {
-		return service.findQuestionnairesPage(PageRequest.of(page, 10));
+		return service
+				.findQuestionnairesPage(PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "questionnaireId")));
 	}
 
 	@PostMapping("/findByTitle")
 	public QuestionnairesResponse findByTitle(@RequestBody String title) {
 		return service.findByTitle(title);
+	}
+
+	@PostMapping("/searchQuestionnaires")
+	public QuestionnairesResponse searchQuestionnaires(@RequestBody QuestionnairesRequest req) {
+		return service.searchQuestionnaires(req);//
 	}
 
 }

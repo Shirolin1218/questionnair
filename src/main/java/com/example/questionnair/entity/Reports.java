@@ -3,12 +3,16 @@ package com.example.questionnair.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "reports")
 public class Reports {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +27,6 @@ public class Reports {
 	@ManyToOne
 	@JoinColumn(name = "questionnaire_id")
 	private Questionnaires questionnaire;
-
 	@ManyToOne
 	@JoinColumn(name = "question_id")
 	private Questions question;

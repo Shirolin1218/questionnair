@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -92,7 +93,8 @@ public class QuestionnairesServiceImpl implements QuestionnairesService {
 			return new QuestionnairesResponse(RtnCode.NO_DATA_UPDATED.getCode(), RtnCode.NO_DATA_UPDATED.getMessage());
 		}
 		questionnaireDao.save(reqQuestionnaire);
-		return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),reqQuestionnaire);
+		return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+				reqQuestionnaire);
 	}
 
 	@Override
@@ -104,9 +106,10 @@ public class QuestionnairesServiceImpl implements QuestionnairesService {
 
 	@Override
 	public QuestionnairesResponse getHowManyData() {// 取得總資料數量並回傳第一頁的資料
-		Page<Questionnaires> questionnairesPage = questionnaireDao.findAll(PageRequest.of(0, 10));
+		Page<Questionnaires> questionnairesPage = questionnaireDao
+				.findAll(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "questionnaireId")));
 		return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
-				questionnairesPage.getContent(), questionnaireDao.findAll().size());
+				questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
 	}
 
 	@Override
@@ -118,29 +121,64 @@ public class QuestionnairesServiceImpl implements QuestionnairesService {
 		return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(), questionnaire);
 	}
 
-//	public List<Questionnaires> searchQuestionnaires(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
-//	    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//	    CriteriaQuery<Questionnaires> query = criteriaBuilder.createQuery(Questionnaires.class);
-//	    Root<Questionnaires> root = query.from(Questionnaires.class);
-//	    
-//	    List<Predicate> predicates = new ArrayList<>();
-//	    
-//	    if (keyword != null && !keyword.isEmpty()) {
-//	        predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + keyword.toLowerCase() + "%"));
-//	    }
-//	    
-//	    if (startDate != null) {
-//	        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), startDate));
-//	    }
-//	    
-//	    if (endDate != null) {
-//	        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), endDate));
-//	    }
-//	    
-//	    query.select(root).where(predicates.toArray(new Predicate[0]));
-//	    
-//	    TypedQuery<Questionnaires> typedQuery = entityManager.createQuery(query);
-//	    return typedQuery.getResultList();
-//	}
+	@Override
+	public QuestionnairesResponse searchQuestionnaires(QuestionnairesRequest req) {
+		if (req == null || req.getQuestionnaire() == null) {
+			return new QuestionnairesResponse(RtnCode.BAD_REQUEST.getCode(), RtnCode.BAD_REQUEST.getMessage());
+		}
+		String reqTitle = req.getQuestionnaire().getTitle();
+		LocalDate reqStartTime = req.getQuestionnaire().getStartDate();
+		LocalDate reqEndTime = req.getQuestionnaire().getEndDate();
+		Pageable pageRequest = PageRequest.of(req.getPage(), 10, Sort.by(Sort.Direction.DESC, "questionnaireId"));
+		Page<Questionnaires> questionnairesPage;
+		
+		if (!StringUtils.hasText(reqTitle)//
+				&& (reqStartTime == null || !StringUtils.hasText(reqStartTime.toString()))//
+				&& (reqEndTime == null || !StringUtils.hasText(reqEndTime.toString()))) {//
+
+			questionnairesPage = questionnaireDao.findAll(pageRequest);
+
+			return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+					questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
+		}
+
+		if (StringUtils.hasText(reqTitle) //
+				&& (reqStartTime == null || !StringUtils.hasText(reqStartTime.toString()))//
+				&& (reqEndTime == null || !StringUtils.hasText(reqEndTime.toString()))) {//
+
+			questionnairesPage = questionnaireDao.findBytitleContaining(reqTitle, pageRequest);
+
+			return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+					questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
+		}
+
+		if (StringUtils.hasText(reqTitle) //
+				&& (reqStartTime != null)//
+				&& (reqEndTime == null || !StringUtils.hasText(reqEndTime.toString()))) {//
+
+			questionnairesPage = questionnaireDao.findBytitleContainingAndStartDateGreaterThanEqual(reqTitle,
+					reqStartTime, pageRequest);
+
+			return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+					questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
+		}
+
+		if (StringUtils.hasText(reqTitle) //
+				&& (reqStartTime == null || !StringUtils.hasText(reqEndTime.toString()))//
+				&& (reqEndTime != null)) {//
+
+			questionnairesPage = questionnaireDao.findBytitleContainingAndEndDateLessThanEqual(reqTitle, reqEndTime,
+					pageRequest);
+
+			return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+					questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
+		}
+
+		questionnairesPage = questionnaireDao.findByTitleContainingAndStartDateGreaterThanEqualAndEndDateLessThanEqual(//
+				reqTitle, reqStartTime, reqEndTime, pageRequest);
+
+		return new QuestionnairesResponse(RtnCode.SUCCESSFUL.getCode(), RtnCode.SUCCESSFUL.getMessage(),
+				questionnairesPage.getContent(), (int) questionnairesPage.getTotalElements());
+	}
 
 }
